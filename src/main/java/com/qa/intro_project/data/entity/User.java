@@ -2,6 +2,7 @@ package com.qa.intro_project.data.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -98,6 +99,24 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(email, id, posts, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		return Objects.equals(email, other.email) && id == other.id && Objects.equals(posts, other.posts)
+				&& Objects.equals(username, other.username);
 	}
 	
 }

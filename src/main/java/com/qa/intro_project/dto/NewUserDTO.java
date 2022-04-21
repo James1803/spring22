@@ -1,5 +1,7 @@
 package com.qa.intro_project.dto;
 
+import java.util.Objects;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -35,4 +37,23 @@ public class NewUserDTO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(email, username);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		NewUserDTO other = (NewUserDTO) obj;
+		return Objects.equals(email, other.email) && Objects.equals(username, other.username);
+	}
+	
+	
 }
