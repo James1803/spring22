@@ -18,6 +18,19 @@ public class PostDTO {
 	private UserDTO userDTO;
 	
 	private LocalDate postedAt;
+	
+	protected PostDTO() {
+		
+	}
+
+	public PostDTO(int id, String title, String content, UserDTO userDTO, LocalDate postedAt) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.userDTO = userDTO;
+		this.postedAt = postedAt;
+	}
 
 	public int getId() {
 		return id;

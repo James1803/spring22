@@ -20,6 +20,7 @@ import org.modelmapper.ModelMapper;
 
 import com.qa.intro_project.data.entity.User;
 import com.qa.intro_project.data.repository.UserRepository;
+import com.qa.intro_project.dto.NewUserDTO;
 import com.qa.intro_project.dto.UserDTO;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -106,6 +107,26 @@ public class UserServiceUnitTest {
 	
 	@Test
 	public void createTest() {
-		fail();
+		// Arrange
+		User user = users.get(0);
+		
+		NewUserDTO userDTO = new NewUserDTO();
+		userDTO.setUsername(user.getUsername());
+		userDTO.setEmail(user.getEmail());
+		
+		UserDTO newUser = new UserDTO(user.getId(), user.getUsername(), user.getEmail());
+		
+		when(modelMapper.map(userDTO, User.class)).thenReturn(user);
+		when(userRepository.save(user)).thenReturn(user);
+		when(modelMapper.map(user, UserDTO.class)).thenReturn(newUser);
+		
+		// Act
+		UserDTO actual = userService.createUser(userDTO);
+		
+		// Assert
+		assertEquals(newUser, actual);
+		verify(modelMapper).map(userDTO, User.class);
+		verify(userRepository).save(user);
+		verify(modelMapper).map(user, UserDTO.class);
 	}
 }

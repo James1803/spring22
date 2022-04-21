@@ -63,6 +63,15 @@ public class Post {
 		this.user = user;
 		this.postedAt = LocalDate.now();
 	}
+	
+	public Post(int id, String title, String content, User user) {
+		super();
+		this.id = id;
+		this.title = title;
+		this.content = content;
+		this.user = user;
+		this.postedAt = LocalDate.now();
+	}
 
 	public int getId() {
 		return id;

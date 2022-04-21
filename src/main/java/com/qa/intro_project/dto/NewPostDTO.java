@@ -16,6 +16,16 @@ public class NewPostDTO {
 	@NotNull
 	@NotBlank
 	private String content;
+	
+	protected NewPostDTO() {
+		
+	}
+
+	public NewPostDTO(String title, String content) {
+		super();
+		this.title = title;
+		this.content = content;
+	}
 
 	public String getTitle() {
 		return title;
