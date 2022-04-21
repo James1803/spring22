@@ -12,13 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity 
 @Table(name = "post")
@@ -38,16 +35,6 @@ public class Post {
 	@NotBlank
 	private String content;
 	
-	@ManyToOne(optional = true, fetch = FetchType.EAGER)
-	// - `optional` set to true indicates this is not a required relationship (a user may not have any posts)
-	// - setting to EAGER fetch otherwise serialisation error occurs due to the proxy object Hibernate uses
-	// - fetch type can be set to lazy when using DTOs
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	// - `name` is the name of the column in the Post table that stores the user id
-	// - `referencedColumnName` is the name of the primary key field in the User table
-	@JsonIgnore
-	private User user;
-	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "tagged_post", // name of the join table
 	           joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"), // name of the key of the domain which owns the relationship
@@ -65,20 +52,11 @@ public class Post {
 		this.content = content;
 		this.tags = new ArrayList<>();
 	}
-
-	public Post(String title, String content, User user) {
-		super();
-		this.title = title;
-		this.content = content;
-		this.user = user;
-		this.tags = new ArrayList<>();
-	}
 	
-	public Post(String title, String content, User user, List<Tag> tags) {
+	public Post(String title, String content, List<Tag> tags) {
 		super();
 		this.title = title;
 		this.content = content;
-		this.user = user;
 		this.tags = tags;
 	}
 
@@ -104,14 +82,6 @@ public class Post {
 
 	public void setContent(String content) {
 		this.content = content;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
 	}
 
 	public List<Tag> getTags() {

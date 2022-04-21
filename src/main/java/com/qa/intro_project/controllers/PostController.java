@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qa.intro_project.data.entity.Post;
-import com.qa.intro_project.data.entity.User;
 import com.qa.intro_project.data.repository.PostRepository;
 import com.qa.intro_project.data.repository.TagRepository;
 
