@@ -1,5 +1,6 @@
 package com.qa.intro_project.data.entity;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.persistence.Column;
@@ -35,23 +36,24 @@ public class Post {
 	@NotBlank
 	private String content;
 	
+	// LocalDateTime instead of LocalDate for both time and date
+	@NotNull
+	private LocalDate postedAt;
+	
 	@ManyToOne(optional = true, fetch = FetchType.LAZY)
-	// - `optional` set to true indicates this is not a required relationship (a user may not have any posts)
-	// - setting to EAGER fetch otherwise serialisation error occurs due to the proxy object Hibernate uses
-	// - fetch type can be set to lazy when using DTOs
 	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	// - `name` is the name of the column in the Post table that stores the user id
-	// - `referencedColumnName` is the name of the primary key field in the User table
 	private User user;
 	
 	protected Post() {
 		super();
+		this.postedAt = LocalDate.now();
 	}
 
 	public Post(String title, String content) {
 		super();
 		this.title = title;
 		this.content = content;
+		this.postedAt = LocalDate.now();
 	}
 
 	public Post(String title, String content, User user) {
@@ -59,6 +61,7 @@ public class Post {
 		this.title = title;
 		this.content = content;
 		this.user = user;
+		this.postedAt = LocalDate.now();
 	}
 
 	public int getId() {
@@ -93,14 +96,23 @@ public class Post {
 		this.user = user;
 	}
 
+	public LocalDate getPostedAt() {
+		return postedAt;
+	}
+
+	public void setPostedAt(LocalDate postedAt) {
+		this.postedAt = postedAt;
+	}
+	
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", title=" + title + ", content=" + content + "]";
+		return "Post [id=" + id + ", title=" + title + ", content=" + content + ", postedAt=" + postedAt + ", user="
+				+ user + "]";
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(content, id, title, user);
+		return Objects.hash(content, id, postedAt, title, user);
 	}
 
 	@Override
@@ -112,8 +124,8 @@ public class Post {
 		if (getClass() != obj.getClass())
 			return false;
 		Post other = (Post) obj;
-		return Objects.equals(content, other.content) && id == other.id && Objects.equals(title, other.title)
-				&& Objects.equals(user, other.user);
+		return Objects.equals(content, other.content) && id == other.id && Objects.equals(postedAt, other.postedAt)
+				&& Objects.equals(title, other.title) && Objects.equals(user, other.user);
 	}
 	
 }

@@ -71,5 +71,10 @@ public class UserDTO {
 		UserDTO other = (UserDTO) obj;
 		return Objects.equals(email, other.email) && id == other.id && Objects.equals(username, other.username);
 	}
+
+	@Override
+	public String toString() {
+		return "UserDTO [id=" + id + ", username=" + username + ", email=" + email + "]";
+	}
 	
 }

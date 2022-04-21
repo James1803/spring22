@@ -12,20 +12,24 @@ import org.springframework.stereotype.Service;
 
 import com.qa.intro_project.data.entity.Post;
 import com.qa.intro_project.data.entity.User;
+import com.qa.intro_project.data.repository.PostRepository;
 import com.qa.intro_project.data.repository.UserRepository;
 import com.qa.intro_project.dto.NewUserDTO;
+import com.qa.intro_project.dto.PostDTO;
 import com.qa.intro_project.dto.UserDTO;
 
 @Service
 public class UserService {
 	
 	private UserRepository userRepository;
+	private PostService postService;
 	private ModelMapper modelMapper;
 
 	@Autowired
-	public UserService(UserRepository userRepository, ModelMapper modelMapper) {
+	public UserService(UserRepository userRepository, PostService postService, ModelMapper modelMapper) {
 		super();
 		this.userRepository = userRepository;
+		this.postService = postService;
 		this.modelMapper = modelMapper;
 	}
 
@@ -53,29 +57,29 @@ public class UserService {
 //		return this.toDTO(user.orElseThrow(() -> new EntityNotFoundException("User not found with id " + id)));
 	}
 	
-	// TODO: 5. Implement PostDTO, convert this method to use it
-	public List<Post> getUserPosts(int userId) {
-		Optional<User> user = userRepository.findById(userId);
-		if (user.isPresent()) {
-			return user.get().getPosts();
-		}
-		throw new EntityNotFoundException("User not found with id " + userId);
-//		return user.orElseThrow(() -> new EntityNotFoundException("Posts not found with user id " + userId)).getPosts();
-	}
-	
 	public UserDTO createUser(NewUserDTO user) {
 		User toSave = this.modelMapper.map(user, User.class);
 		User newUser = userRepository.save(toSave);
 		return this.toDTO(newUser);
 	}
 	
-	public UserDTO updateUser(User user, int id) {
-		// TODO: 1. Implement me
-		return null;
+	public UserDTO updateUser(NewUserDTO user, int id) {
+		// Alternate way of retrieving a user, no optionals involved
+		if (userRepository.existsById(id)) {
+			User savedUser = userRepository.getById(id);
+			savedUser.setEmail(user.getEmail());
+			savedUser.setUsername(user.getUsername());
+			return this.toDTO(userRepository.save(savedUser));
+		}
+		throw new EntityNotFoundException("User not found with id " + id);
 	}
 	
 	public void deleteUser(int id) {
-		// TODO: 2. Implement me
+		if (userRepository.existsById(id)) {
+			userRepository.deleteById(id);
+			return;
+		}
+		throw new EntityNotFoundException("User not found with id " + id); 
 	}
 	
 	private UserDTO toDTO(User user) {		
@@ -84,6 +88,13 @@ public class UserService {
 		// ModelMapper will create an instance of UserDTO
 		// - it will then assign the values of all fields in `user`, which have the same name
 		//   as the fields in `UserDTO.class`, to that new instance of UserDTO
+	}
+
+	public List<PostDTO> getUserPosts(int userId) {
+		UserDTO user = this.getUser(userId);
+		List<PostDTO> posts = postService.getPostsByUserId(userId);
+		posts.forEach(post -> post.setUserDTO(user));
+		return posts;
 	}
 	
 }

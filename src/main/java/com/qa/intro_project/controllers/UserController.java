@@ -1,7 +1,6 @@
 package com.qa.intro_project.controllers;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -20,9 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qa.intro_project.data.entity.Post;
 import com.qa.intro_project.data.entity.User;
-import com.qa.intro_project.data.repository.PostRepository;
-import com.qa.intro_project.data.repository.UserRepository;
 import com.qa.intro_project.dto.NewUserDTO;
+import com.qa.intro_project.dto.PostDTO;
 import com.qa.intro_project.dto.UserDTO;
 import com.qa.intro_project.service.UserService;
 
@@ -49,10 +47,8 @@ public class UserController {
 	}
 	
 	@GetMapping(path = "/{id}/posts")
-	public ResponseEntity<List<Post>> getUserPosts(@PathVariable(name = "id") int userId) {
-		// TODO: 6. Implement this method using a PostDTO (requires task 3 in UserService to be done first)
-		List<Post> posts = userService.getUserPosts(userId);
-		return ResponseEntity.ok(posts);
+	public ResponseEntity<List<PostDTO>> getUserPosts(@PathVariable(name = "id") int userId) {
+		return ResponseEntity.ok(userService.getUserPosts(userId));
 	}
 	
 	@PostMapping
@@ -65,15 +61,15 @@ public class UserController {
 		return new ResponseEntity<>(newUser, headers, HttpStatus.CREATED);
 	}
 	
-	@PutMapping(path = "/{id}")
-	public ResponseEntity<UserDTO> updateUser(@RequestBody User user, @PathVariable(name = "id") int id) {
-		// TODO: 3. Implement me
-		return null;
+	@PutMapping(path = "/{id}") // could be preferable to create an UpdateUserDTO if user is expanded more
+	public ResponseEntity<UserDTO> updateUser(@RequestBody NewUserDTO newUserDTO, @PathVariable(name = "id") int id) {
+		return ResponseEntity.ok(userService.updateUser(newUserDTO, id));
 	}
 	
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<?> deleteUser(@PathVariable(name = "id") int id) {
-		// TODO: 4. Implement me
-		return null;
+		UserDTO deletedUser = userService.getUser(id);
+		userService.deleteUser(id);
+		return ResponseEntity.ok(deletedUser);
 	}
 }

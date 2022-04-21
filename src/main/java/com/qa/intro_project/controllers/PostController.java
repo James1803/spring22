@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.qa.intro_project.data.entity.Post;
 import com.qa.intro_project.data.repository.PostRepository;
+import com.qa.intro_project.dto.NewPostDTO;
+import com.qa.intro_project.dto.PostDTO;
+import com.qa.intro_project.dto.UpdatePostDTO;
+import com.qa.intro_project.service.PostService;
 
 @RestController
 @RequestMapping(path = "/post")
@@ -27,31 +32,26 @@ public class PostController {
 	
 	// TODO: 8. Convert this class to use the post DTOs
 
-	private PostRepository postRepository;
+	private PostService postService;
 	
 	@Autowired
-	public PostController(PostRepository postRepository) {
-		this.postRepository = postRepository;
+	public PostController(PostService postService) {
+		this.postService = postService;
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Post>> getPosts() {
-		return ResponseEntity.ok(postRepository.findAll());
+	public ResponseEntity<List<PostDTO>> getPosts() {
+		return ResponseEntity.ok(postService.getPosts());
 	}
 	
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<Post> getPost(@PathVariable(name = "id") int id) {
-		Optional<Post> post = postRepository.findById(id);
-		
-		if (post.isPresent()) {
-			return new ResponseEntity<>(post.get(), HttpStatus.OK);
-		}
-		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	public ResponseEntity<PostDTO> getPost(@PathVariable(name = "id") int id) {
+		return ResponseEntity.ok(postService.getPost(id));
 	}
 	
 	@PostMapping
-	public ResponseEntity<Post> createPost(@Valid @RequestBody Post post) {
-		Post newPost = postRepository.save(post);
+	public ResponseEntity<PostDTO> createPost(@Valid @RequestBody NewPostDTO post) {
+		PostDTO newPost = postService.createPost(post);
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.add("Location", "http://localhost:8080/post/" + newPost.getId());
@@ -60,14 +60,14 @@ public class PostController {
 	}
 	
 	@PutMapping(path = "/{id}")
-	public Post updatePost(@RequestBody Post post, @PathVariable(name = "id") int id) {
-		// TODO: Implement me
-		return null;
+	public ResponseEntity<PostDTO> updatePost(@Valid @RequestBody UpdatePostDTO post, @PathVariable(name = "id") int id) {
+		return ResponseEntity.ok(postService.updatePost(post, id));
 	}
 	
 	@DeleteMapping(path = "/{id}")
-	public Post deletePost(@PathVariable(name = "id") int id) {
-		// TODO: Implement me
-		return null;
+	public ResponseEntity<?> deletePost(@PathVariable(name = "id") int id) {
+		PostDTO deletedPost = postService.getPost(id);
+		postService.deletePost(id);
+		return ResponseEntity.ok(deletedPost);
 	}
 }
