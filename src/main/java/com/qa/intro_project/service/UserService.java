@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +64,14 @@ public class UserService {
 		return this.toDTO(newUser);
 	}
 	
+	@Transactional
 	public UserDTO updateUser(NewUserDTO user, int id) {
 		// Alternate way of retrieving a user, no optionals involved
 		if (userRepository.existsById(id)) {
 			User savedUser = userRepository.getById(id);
 			savedUser.setEmail(user.getEmail());
 			savedUser.setUsername(user.getUsername());
-			return this.toDTO(userRepository.save(savedUser));
+			return this.toDTO(savedUser);
 		}
 		throw new EntityNotFoundException("User not found with id " + id);
 	}

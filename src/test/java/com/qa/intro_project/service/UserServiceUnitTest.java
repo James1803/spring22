@@ -1,5 +1,6 @@
 package com.qa.intro_project.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,8 +22,6 @@ import com.qa.intro_project.data.entity.User;
 import com.qa.intro_project.data.repository.UserRepository;
 import com.qa.intro_project.dto.NewUserDTO;
 import com.qa.intro_project.dto.UserDTO;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 
 // Not using @SpringBootTest because we do not need the whole application context

@@ -22,7 +22,6 @@ import com.qa.intro_project.data.entity.Post;
 import com.qa.intro_project.data.entity.User;
 import com.qa.intro_project.data.repository.PostRepository;
 import com.qa.intro_project.dto.NewPostDTO;
-import com.qa.intro_project.dto.NewUserDTO;
 import com.qa.intro_project.dto.PostDTO;
 import com.qa.intro_project.dto.UserDTO;
 
