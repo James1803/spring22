@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // that is aware of the UserController bean
 @WebMvcTest(UserController.class)
 @ActiveProfiles({ "test" })
-public class WebLayerIntegrationTest {
+public class UserControllerWebLayerIntegrationTest {
 	
 	@MockBean // equivalent to Mockitos @Mock
 	private UserService userService;
