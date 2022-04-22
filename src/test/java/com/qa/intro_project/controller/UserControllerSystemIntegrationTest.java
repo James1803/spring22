@@ -62,12 +62,14 @@ public class UserControllerSystemIntegrationTest {
 	@Test
 	public void getAllUsersTest() throws Exception {
 		// create a http request builder
+		// - when sending a request with mockmvc, we use the path only ("/user") for example. This
+		//   is because the tests are already aware of the servers URL and port
 		MockHttpServletRequestBuilder request = MockMvcRequestBuilders.request(HttpMethod.GET, uri);
 		
 		// specify accept header (content type accepted)
 		request.accept(MediaType.APPLICATION_JSON);
 		
-		// create json string of users for the expected response
+		// create json string of users for the expected response body
 		String users = objectMapper.writeValueAsString(savedUserDTOs);
 		
 		// create result matchers for the expected response
