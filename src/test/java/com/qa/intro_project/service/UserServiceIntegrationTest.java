@@ -22,9 +22,10 @@ import com.qa.intro_project.data.repository.UserRepository;
 import com.qa.intro_project.dto.NewUserDTO;
 import com.qa.intro_project.dto.UserDTO;
 
-@SpringBootTest
-@Sql(scripts = { "classpath:schema.sql", "classpath:user-data.sql" }, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
-@ActiveProfiles({ "test" })
+@SpringBootTest // launch the application context and creates the beans (essentially starts out app with a test configuration)
+@Sql(scripts = { "classpath:schema.sql", "classpath:user-data.sql" }, 
+	 executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+@ActiveProfiles({ "test" }) // use the application-test.properties file
 public class UserServiceIntegrationTest {
 
 	@Autowired
@@ -42,8 +43,13 @@ public class UserServiceIntegrationTest {
 	
 	@BeforeEach
 	public void init() {
-		savedUsers = userRepository.findAll();
-		savedUsers.forEach(user -> savedUserDTOs.add(modelMapper.map(user, UserDTO.class)));
+		savedUsers = userRepository.findAll(); // get the test data that user-data.sql initialised
+		savedUsers.forEach(user -> savedUserDTOs.add(modelMapper.map(user, UserDTO.class))); // map each user to a dto
+		// for is equivalent to line above
+//		for (User user : savedUsers) {
+//			savedUserDTOs.add(modelMapper.map(user, UserDTO.class));
+//		}
+		
 		nextId = savedUsers.get(savedUsers.size() - 1).getId() + 1;
 	}
 	

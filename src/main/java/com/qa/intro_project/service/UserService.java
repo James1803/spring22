@@ -65,6 +65,8 @@ public class UserService {
 	}
 	
 	@Transactional
+	// @Transactional wraps this whole method in a transaction
+	// - if a RuntimeException is thrown, the transaction is rolled back (i.e., the changes to the database are not made)
 	public UserDTO updateUser(NewUserDTO user, int id) {
 		// Alternate way of retrieving a user, no optionals involved
 		if (userRepository.existsById(id)) {
