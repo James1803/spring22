@@ -28,6 +28,7 @@ import com.qa.intro_project.service.PostService;
 
 @RestController
 @RequestMapping(path = "/post")
+@CrossOrigin("*")
 public class PostController {
 	
 	// TODO: 8. Convert this class to use the post DTOs
